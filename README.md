@@ -1,6 +1,11 @@
-# luthier-survival
+# Luthier Survival
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+**Luthier Survival** (placeholder name) is a top-down survival shooter with crafting and resource management. You are a luthier surviving a zombie apocalypse.
+
+- **DAY**: Farm materials from a magic tree, craft custom guitars to fulfill customer orders, earn money
+- **NIGHT**: Defend your workshop (center of screen) by manually shooting your upgradeable guitar-weapon against zombies coming from all 360°
+
+This is a [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
 This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
 
