@@ -2,17 +2,19 @@ package io.github.matheusspacifico.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.matheusspacifico.utils.Constants;
 
 public class Player {
     private float x;
     private float y;
+    private Texture texture;
 
     public Player() {
         this.x = (Constants.SCREEN_WIDTH - Constants.PLAYER_SIZE) / 2f;
         this.y = (Constants.SCREEN_HEIGHT - Constants.PLAYER_SIZE) / 2f;
+        this.texture = new Texture("player-still.png");
     }
 
     public void update(float delta) {
@@ -39,9 +41,12 @@ public class Player {
         y = Math.max(0, Math.min(y, Constants.SCREEN_HEIGHT - Constants.PLAYER_SIZE));
     }
 
-    public void render(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.CYAN);
-        shapeRenderer.rect(x, y, Constants.PLAYER_SIZE, Constants.PLAYER_SIZE);
+    public void render(SpriteBatch batch) {
+        batch.draw(texture, x, y, Constants.PLAYER_SIZE, Constants.PLAYER_SIZE);
+    }
+
+    public void dispose() {
+        texture.dispose();
     }
 
     public float getX() {

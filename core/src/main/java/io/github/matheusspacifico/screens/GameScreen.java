@@ -1,18 +1,17 @@
 package io.github.matheusspacifico.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.matheusspacifico.entities.Player;
 
 public class GameScreen implements Screen {
-    private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
     private Player player;
 
     @Override
     public void show() {
-        shapeRenderer = new ShapeRenderer();
+        batch = new SpriteBatch();
         player = new Player();
     }
 
@@ -22,9 +21,9 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        player.render(shapeRenderer);
-        shapeRenderer.end();
+        batch.begin();
+        player.render(batch);
+        batch.end();
     }
 
     @Override
@@ -45,6 +44,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
+        batch.dispose();
+        player.dispose();
     }
 }
