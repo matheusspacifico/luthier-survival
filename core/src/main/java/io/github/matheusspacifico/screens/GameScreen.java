@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 
     private void renderCrosshair() {
         float mouseX = Gdx.input.getX();
-        float mouseY = Constants.SCREEN_HEIGHT - Gdx.input.getY();
+        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         float size = Constants.CROSSHAIR_SIZE / 2f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

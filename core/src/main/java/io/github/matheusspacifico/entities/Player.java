@@ -12,8 +12,8 @@ public class Player {
     private Texture texture;
 
     public Player() {
-        this.x = (Constants.SCREEN_WIDTH - Constants.PLAYER_SIZE) / 2f;
-        this.y = (Constants.SCREEN_HEIGHT - Constants.PLAYER_SIZE) / 2f;
+        this.x = (Gdx.graphics.getWidth() - Constants.PLAYER_SIZE) / 2f;
+        this.y = (Gdx.graphics.getHeight() - Constants.PLAYER_SIZE) / 2f;
         this.texture = new Texture("player-still.png");
     }
 
@@ -37,8 +37,8 @@ public class Player {
             x += speed * delta;
         }
 
-        x = Math.max(0, Math.min(x, Constants.SCREEN_WIDTH - Constants.PLAYER_SIZE));
-        y = Math.max(0, Math.min(y, Constants.SCREEN_HEIGHT - Constants.PLAYER_SIZE));
+        x = Math.max(0, Math.min(x, Gdx.graphics.getWidth() - Constants.PLAYER_SIZE));
+        y = Math.max(0, Math.min(y, Gdx.graphics.getHeight() - Constants.PLAYER_SIZE));
     }
 
     public void render(SpriteBatch batch) {

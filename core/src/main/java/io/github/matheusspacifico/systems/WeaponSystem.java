@@ -63,7 +63,7 @@ public class WeaponSystem {
         float playerCenterY = player.getY() + Constants.PLAYER_SIZE / 2f;
 
         float mouseX = Gdx.input.getX();
-        float mouseY = Constants.SCREEN_HEIGHT - Gdx.input.getY();
+        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
         Projectile projectile = new Projectile(playerCenterX, playerCenterY, mouseX, mouseY);
         projectiles.add(projectile);

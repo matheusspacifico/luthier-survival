@@ -1,5 +1,6 @@
 package io.github.matheusspacifico.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.matheusspacifico.utils.Constants;
@@ -41,8 +42,8 @@ public class Projectile {
         x += velocityX * delta;
         y += velocityY * delta;
 
-        if (x < -Constants.PROJECTILE_SIZE || x > Constants.SCREEN_WIDTH + Constants.PROJECTILE_SIZE ||
-            y < -Constants.PROJECTILE_SIZE || y > Constants.SCREEN_HEIGHT + Constants.PROJECTILE_SIZE) {
+        if (x < -Constants.PROJECTILE_SIZE || x > Gdx.graphics.getWidth() + Constants.PROJECTILE_SIZE ||
+            y < -Constants.PROJECTILE_SIZE || y > Gdx.graphics.getHeight() + Constants.PROJECTILE_SIZE) {
             active = false;
         }
     }
