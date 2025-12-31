@@ -3,9 +3,13 @@ package io.github.matheusspacifico.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.matheusspacifico.Main;
+import io.github.matheusspacifico.utils.Constants;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
+    // Launch modes: "windowed", "fullscreen", "borderless"
+    private static final String LAUNCH_MODE = "borderless";
+
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
@@ -28,7 +32,21 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        configuration.setWindowedMode(800, 600);
+        // Window mode configuration
+        switch (LAUNCH_MODE) {
+            case "fullscreen":
+                configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+                break;
+            case "borderless":
+                configuration.setDecorated(false);
+                configuration.setWindowedMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+                configuration.setWindowPosition(0, 0);
+                break;
+            case "windowed":
+            default:
+                configuration.setWindowedMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+                break;
+        }
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
