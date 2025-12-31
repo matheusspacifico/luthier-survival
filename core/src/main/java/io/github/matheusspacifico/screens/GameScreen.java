@@ -7,16 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.matheusspacifico.Main;
-import io.github.matheusspacifico.entities.Player;
-import io.github.matheusspacifico.systems.WeaponSystem;
 import io.github.matheusspacifico.utils.Constants;
+import io.github.matheusspacifico.world.GameWorld;
 
 public class GameScreen implements Screen {
     private final Main game;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
-    private Player player;
-    private WeaponSystem weaponSystem;
+    private GameWorld world;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -26,8 +24,7 @@ public class GameScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        player = new Player();
-        weaponSystem = new WeaponSystem();
+        world = new GameWorld();
 
         Gdx.input.setCursorCatched(false);
         Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.None);
@@ -35,17 +32,19 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        player.update(delta);
-        weaponSystem.update(delta, player);
+        // Update world
+        world.update(delta);
 
+        // Clear screen
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
+        // Render world
         batch.begin();
-        player.render(batch);
-        weaponSystem.renderProjectiles(batch);
-        weaponSystem.renderUI(batch);
+        world.render(batch);
+        world.renderUI(batch);
         batch.end();
 
+        // Render crosshair on top
         renderCrosshair();
     }
 
@@ -85,7 +84,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
-        player.dispose();
-        weaponSystem.dispose();
+        world.dispose();
     }
 }

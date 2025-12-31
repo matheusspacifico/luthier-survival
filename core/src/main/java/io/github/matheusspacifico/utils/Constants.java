@@ -27,5 +27,10 @@ public final class Constants {
     // Crosshair
     public static final int CROSSHAIR_SIZE = (int) (16 * SPRITE_SCALE);
 
+    // House
+    public static final int HOUSE_WIDTH = (int) (96 * SPRITE_SCALE);
+    public static final int HOUSE_HEIGHT = (int) (96 * SPRITE_SCALE);
+    public static final int HOUSE_INITIAL_HP = 100;
+
     private Constants() {}
 }

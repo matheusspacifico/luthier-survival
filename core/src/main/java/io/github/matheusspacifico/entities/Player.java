@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import io.github.matheusspacifico.utils.Constants;
 
-public class Player {
+public class Player implements Entity {
     private float x;
     private float y;
+    private Rectangle bounds;
 
     // Animation textures
     private Texture stillTexture;
@@ -23,8 +25,14 @@ public class Player {
     private boolean facingLeft;
 
     public Player() {
-        this.x = (Gdx.graphics.getWidth() - Constants.PLAYER_SIZE) / 2f;
-        this.y = (Gdx.graphics.getHeight() - Constants.PLAYER_SIZE) / 2f;
+        this((Gdx.graphics.getWidth() - Constants.PLAYER_SIZE) / 2f,
+             (Gdx.graphics.getHeight() - Constants.PLAYER_SIZE) / 2f);
+    }
+
+    public Player(float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.bounds = new Rectangle(x, y, Constants.PLAYER_SIZE, Constants.PLAYER_SIZE);
 
         // Load animation frames
         this.stillTexture = new Texture("player-still.png");
@@ -37,6 +45,7 @@ public class Player {
         this.facingLeft = false;
     }
 
+    @Override
     public void update(float delta) {
         float speed = Constants.PLAYER_SPEED;
 
@@ -83,6 +92,9 @@ public class Player {
             animationTimer = 0f;
             currentFrame = 0;
         }
+
+        // Update bounds to match position
+        bounds.setPosition(x, y);
     }
 
     private Texture getCurrentTexture() {
@@ -99,6 +111,7 @@ public class Player {
         }
     }
 
+    @Override
     public void render(SpriteBatch batch) {
         Texture texture = getCurrentTexture();
 
@@ -112,17 +125,30 @@ public class Player {
         }
     }
 
+    @Override
     public void dispose() {
         stillTexture.dispose();
         walk1Texture.dispose();
         walk2Texture.dispose();
     }
 
+    @Override
     public float getX() {
         return x;
     }
 
+    @Override
     public float getY() {
         return y;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return false;
     }
 }

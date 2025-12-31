@@ -161,13 +161,14 @@ HOUSE_INITIAL_HP = 100
 - [x] Menu system (MenuScreen, SettingsScreen)
 - [x] FreeType fonts for crisp UI text
 - [x] FitViewport for resolution independence
+- [x] GameWorld entity management (02_game_world.md)
 
-**Current Goal**: Game World and House Entity
+**Current Goal**: House Entity
 
 **Next Steps**:
-1. GameWorld entity management (02_game_world.md)
-2. House entity - central defense target (03_house_entity.md)
-3. Day/Night cycle system (04_day_night_cycle.md)
+1. House entity - central defense target (03_house_entity.md)
+2. Day/Night cycle system (04_day_night_cycle.md)
+3. Magic tree chopping (05_magic_tree.md)
 
 ---
 

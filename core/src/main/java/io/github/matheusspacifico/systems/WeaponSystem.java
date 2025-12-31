@@ -4,25 +4,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 import io.github.matheusspacifico.entities.Player;
 import io.github.matheusspacifico.entities.Projectile;
 import io.github.matheusspacifico.utils.Constants;
+import io.github.matheusspacifico.world.GameWorld;
 
 public class WeaponSystem {
     private int currentAmmo;
     private boolean isReloading;
     private float reloadTimer;
     private float fireTimer;
-    private Array<Projectile> projectiles;
+    private GameWorld world;
     private BitmapFont font;
 
-    public WeaponSystem() {
+    public WeaponSystem(GameWorld world) {
+        this.world = world;
         this.currentAmmo = Constants.MAGAZINE_SIZE;
         this.isReloading = false;
         this.reloadTimer = 0f;
         this.fireTimer = 0f;
-        this.projectiles = new Array<>();
         this.font = new BitmapFont();
     }
 
@@ -44,14 +44,6 @@ public class WeaponSystem {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot()) {
             shoot(player);
         }
-
-        for (int i = projectiles.size - 1; i >= 0; i--) {
-            Projectile p = projectiles.get(i);
-            p.update(delta);
-            if (!p.isActive()) {
-                projectiles.removeIndex(i);
-            }
-        }
     }
 
     private boolean canShoot() {
@@ -66,7 +58,7 @@ public class WeaponSystem {
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
         Projectile projectile = new Projectile(playerCenterX, playerCenterY, mouseX, mouseY);
-        projectiles.add(projectile);
+        world.spawnProjectile(projectile);
 
         currentAmmo--;
         fireTimer = Constants.FIRE_RATE;
@@ -81,12 +73,6 @@ public class WeaponSystem {
         reloadTimer = Constants.RELOAD_TIME;
     }
 
-    public void renderProjectiles(SpriteBatch batch) {
-        for (Projectile p : projectiles) {
-            p.render(batch);
-        }
-    }
-
     public void renderUI(SpriteBatch batch) {
         String ammoText;
         if (isReloading) {
@@ -96,10 +82,6 @@ public class WeaponSystem {
         }
 
         font.draw(batch, ammoText, 10, 30);
-    }
-
-    public Array<Projectile> getProjectiles() {
-        return projectiles;
     }
 
     public void dispose() {
