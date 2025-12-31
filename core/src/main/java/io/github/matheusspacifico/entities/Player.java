@@ -12,8 +12,8 @@ public class Player {
 
     // Animation textures
     private Texture stillTexture;
+    private Texture walk1Texture;
     private Texture walk2Texture;
-    private Texture walk3Texture;
 
     // Animation state
     private static final float FRAME_DURATION = 0.12f;
@@ -28,8 +28,8 @@ public class Player {
 
         // Load animation frames
         this.stillTexture = new Texture("player-still.png");
+        this.walk1Texture = new Texture("player-walk-1.png");
         this.walk2Texture = new Texture("player-walk-2.png");
-        this.walk3Texture = new Texture("player-walk-3.png");
 
         this.animationTimer = 0f;
         this.currentFrame = 0;
@@ -92,9 +92,9 @@ public class Player {
         // Frame sequence: still -> walk2 -> walk3 -> walk2 -> (repeat)
         switch (currentFrame) {
             case 0: return stillTexture;
-            case 1: return walk2Texture;
-            case 2: return walk3Texture;
-            case 3: return walk2Texture;
+            case 1: return walk1Texture;
+            case 2: return walk2Texture;
+            case 3: return walk1Texture;
             default: return stillTexture;
         }
     }
@@ -114,8 +114,8 @@ public class Player {
 
     public void dispose() {
         stillTexture.dispose();
+        walk1Texture.dispose();
         walk2Texture.dispose();
-        walk3Texture.dispose();
     }
 
     public float getX() {
