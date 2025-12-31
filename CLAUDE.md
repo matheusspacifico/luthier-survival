@@ -26,34 +26,26 @@
 ## Project Structure
 
 ```
-axe-and-axes/
-├── core/src/main/java/com/axeandaxes/
+game/
+├── core/src/main/java/io/github/matheusspacifico/
 │   ├── Main.java                 # Entry point, game initialization
 │   ├── screens/                  # Game screens
 │   │   ├── GameScreen.java       # Main gameplay
 │   │   ├── MenuScreen.java       # Main menu
+│   │   ├── SettingsScreen.java   # Display settings
 │   │   └── ...
 │   ├── entities/                 # Game entities
 │   │   ├── Player.java
-│   │   ├── Zombie.java
-│   │   ├── House.java
+│   │   ├── Projectile.java
 │   │   └── ...
 │   ├── systems/                  # Game systems
-│   │   ├── DayNightCycle.java
-│   │   ├── CraftingSystem.java
-│   │   ├── OrderSystem.java
-│   │   └── ...
-│   ├── world/                    # World management
-│   │   ├── GameWorld.java
+│   │   ├── WeaponSystem.java
 │   │   └── ...
 │   └── utils/                    # Utilities
-│       ├── Constants.java
-│       ├── Assets.java
-│       └── ...
+│       └── Constants.java
 ├── assets/                       # Game assets
-│   ├── sprites/
-│   ├── audio/
-│   └── fonts/
+│   ├── fonts/                    # TTF fonts (OpenSans.ttf)
+│   └── ...
 └── lwjgl3/                       # Desktop launcher
 ```
 
@@ -67,10 +59,9 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 SPRITE_SCALE = 2.5  // Scales pixel art for higher resolution
 
-// Display modes (configured in Lwjgl3Launcher.java)
-// "windowed" - standard window
-// "fullscreen" - exclusive fullscreen
-// "borderless" - borderless windowed (default)
+// Display modes (configured in Lwjgl3Launcher.java and SettingsScreen.java)
+// "windowed" - standard window (1280x720)
+// "borderless" - borderless windowed (default, fills screen)
 
 // Sprites (16-bit pixel art style, scaled by SPRITE_SCALE at runtime)
 PLAYER_SIZE = 32x32 (rendered at 80x80)
@@ -163,12 +154,20 @@ HOUSE_INITIAL_HP = 100
 
 > Update this section as you progress
 
-**Current Goal**: Basic project setup and player movement
+**Completed**:
+- [x] Project structure setup
+- [x] Player entity with WASD movement
+- [x] Basic rendering and shooting
+- [x] Menu system (MenuScreen, SettingsScreen)
+- [x] FreeType fonts for crisp UI text
+- [x] FitViewport for resolution independence
+
+**Current Goal**: Game World and House Entity
 
 **Next Steps**:
-1. Project structure setup
-2. Player entity with WASD movement
-3. Basic rendering
+1. GameWorld entity management (02_game_world.md)
+2. House entity - central defense target (03_house_entity.md)
+3. Day/Night cycle system (04_day_night_cycle.md)
 
 ---
 
