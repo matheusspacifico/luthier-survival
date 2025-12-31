@@ -162,6 +162,7 @@ HOUSE_INITIAL_HP = 100
 - [x] FreeType fonts for crisp UI text
 - [x] FitViewport for resolution independence
 - [x] GameWorld entity management (02_game_world.md)
+- [x] ESC pause menu with settings and exit confirmation
 
 **Current Goal**: House Entity
 

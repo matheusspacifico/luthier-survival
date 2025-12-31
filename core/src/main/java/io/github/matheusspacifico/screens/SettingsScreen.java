@@ -40,12 +40,19 @@ public class SettingsScreen implements Screen {
     private int hoveredButton = -1;
     private String currentMode;
 
+    private GameScreen returnToGameScreen;
+
     private static final float BUTTON_WIDTH = 300;
     private static final float BUTTON_HEIGHT = 50;
     private static final float BUTTON_SPACING = 15;
 
     public SettingsScreen(Main game) {
+        this(game, null);
+    }
+
+    public SettingsScreen(Main game, GameScreen returnToGameScreen) {
         this.game = game;
+        this.returnToGameScreen = returnToGameScreen;
     }
 
     @Override
@@ -58,7 +65,6 @@ public class SettingsScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         layout = new GlyphLayout();
 
-        // Load TTF font and generate at exact sizes needed
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans.ttf"));
 
         titleFont = createFont(56);
@@ -120,12 +126,12 @@ public class SettingsScreen implements Screen {
             } else if (hoveredButton == 1) {
                 setBorderless();
             } else if (hoveredButton == 2) {
-                game.setScreen(new MenuScreen(game));
+                goBack();
             }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new MenuScreen(game));
+            goBack();
         }
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -149,12 +155,26 @@ public class SettingsScreen implements Screen {
         subtitleFont.setColor(Color.LIGHT_GRAY);
         drawCenteredText(subtitleFont, "Display Mode", Constants.SCREEN_HEIGHT - 220);
 
+        if (returnToGameScreen != null) {
+            subtitleFont.setColor(Color.GRAY);
+            drawCenteredText(subtitleFont, "(Game Paused)", Constants.SCREEN_HEIGHT - 250);
+        }
+
         buttonFont.setColor(Color.WHITE);
         drawCenteredText(buttonFont, "Windowed", windowedButton.y + BUTTON_HEIGHT / 2 + 10);
         drawCenteredText(buttonFont, "Borderless", borderlessButton.y + BUTTON_HEIGHT / 2 + 10);
         drawCenteredText(buttonFont, "Back", backButton.y + BUTTON_HEIGHT / 2 + 10);
 
         batch.end();
+    }
+
+    private void goBack() {
+        if (returnToGameScreen != null) {
+            returnToGameScreen.onReturnFromSettings();
+            game.setScreen(returnToGameScreen);
+        } else {
+            game.setScreen(new MenuScreen(game));
+        }
     }
 
     private void setWindowed() {
