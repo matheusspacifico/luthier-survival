@@ -3,13 +3,16 @@ package io.github.matheusspacifico.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.matheusspacifico.Main;
 import io.github.matheusspacifico.utils.Constants;
 
@@ -20,6 +23,9 @@ public class MenuScreen implements Screen {
     private BitmapFont titleFont;
     private BitmapFont buttonFont;
     private GlyphLayout layout;
+
+    private OrthographicCamera camera;
+    private Viewport viewport;
 
     private Rectangle startButton;
     private Rectangle settingsButton;
@@ -37,6 +43,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, camera);
+        viewport.apply(true);
+
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         layout = new GlyphLayout();
@@ -61,11 +71,18 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
-        Vector2 mouse = new Vector2(Gdx.input.getX(), Constants.SCREEN_HEIGHT - Gdx.input.getY());
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        // Convert mouse coordinates to world coordinates
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(mousePos);
+
         hoveredButton = -1;
-        if (startButton.contains(mouse)) hoveredButton = 0;
-        else if (settingsButton.contains(mouse)) hoveredButton = 1;
-        else if (quitButton.contains(mouse)) hoveredButton = 2;
+        if (startButton.contains(mousePos.x, mousePos.y)) hoveredButton = 0;
+        else if (settingsButton.contains(mousePos.x, mousePos.y)) hoveredButton = 1;
+        else if (quitButton.contains(mousePos.x, mousePos.y)) hoveredButton = 2;
 
         if (Gdx.input.justTouched()) {
             if (hoveredButton == 0) {
@@ -128,7 +145,9 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
 
     @Override
     public void pause() {}
