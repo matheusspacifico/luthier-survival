@@ -1,11 +1,11 @@
 package io.github.matheusspacifico;
 
 import com.badlogic.gdx.Game;
-import io.github.matheusspacifico.screens.GameScreen;
+import io.github.matheusspacifico.screens.MenuScreen;
 
 public class Main extends Game {
     @Override
     public void create() {
-        setScreen(new GameScreen());
+        setScreen(new MenuScreen(this));
     }
 }

@@ -6,15 +6,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import io.github.matheusspacifico.Main;
 import io.github.matheusspacifico.entities.Player;
 import io.github.matheusspacifico.systems.WeaponSystem;
 import io.github.matheusspacifico.utils.Constants;
 
 public class GameScreen implements Screen {
+    private final Main game;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private Player player;
     private WeaponSystem weaponSystem;
+
+    public GameScreen(Main game) {
+        this.game = game;
+    }
 
     @Override
     public void show() {
