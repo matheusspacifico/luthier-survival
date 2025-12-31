@@ -5,13 +5,16 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.matheusspacifico.Main;
 import io.github.matheusspacifico.utils.Constants;
 
@@ -23,9 +26,11 @@ public class SettingsScreen implements Screen {
     private BitmapFont buttonFont;
     private GlyphLayout layout;
 
+    private OrthographicCamera camera;
+    private Viewport viewport;
+
     private Rectangle windowedButton;
     private Rectangle borderlessButton;
-    private Rectangle fullscreenButton;
     private Rectangle backButton;
 
     private int hoveredButton = -1;
@@ -41,6 +46,10 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, camera);
+        viewport.apply(true);
+
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         layout = new GlyphLayout();
@@ -56,11 +65,14 @@ public class SettingsScreen implements Screen {
 
         windowedButton = new Rectangle(centerX, startY, BUTTON_WIDTH, BUTTON_HEIGHT);
         borderlessButton = new Rectangle(centerX, startY - BUTTON_HEIGHT - BUTTON_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT);
-        fullscreenButton = new Rectangle(centerX, startY - (BUTTON_HEIGHT + BUTTON_SPACING) * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButton = new Rectangle(centerX, startY - (BUTTON_HEIGHT + BUTTON_SPACING) * 3.5f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton = new Rectangle(centerX, startY - (BUTTON_HEIGHT + BUTTON_SPACING) * 2.5f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
+        detectCurrentMode();
+    }
+
+    private void detectCurrentMode() {
         if (Gdx.graphics.isFullscreen()) {
-            currentMode = "fullscreen";
+            currentMode = "borderless";
         } else {
             DisplayMode dm = Gdx.graphics.getDisplayMode();
             if (Gdx.graphics.getWidth() == dm.width && Gdx.graphics.getHeight() == dm.height) {
@@ -75,12 +87,18 @@ public class SettingsScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
-        Vector2 mouse = new Vector2(Gdx.input.getX(), Constants.SCREEN_HEIGHT - Gdx.input.getY());
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        // Convert mouse coordinates to world coordinates
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(mousePos);
+
         hoveredButton = -1;
-        if (windowedButton.contains(mouse)) hoveredButton = 0;
-        else if (borderlessButton.contains(mouse)) hoveredButton = 1;
-        else if (fullscreenButton.contains(mouse)) hoveredButton = 2;
-        else if (backButton.contains(mouse)) hoveredButton = 3;
+        if (windowedButton.contains(mousePos.x, mousePos.y)) hoveredButton = 0;
+        else if (borderlessButton.contains(mousePos.x, mousePos.y)) hoveredButton = 1;
+        else if (backButton.contains(mousePos.x, mousePos.y)) hoveredButton = 2;
 
         if (Gdx.input.justTouched()) {
             if (hoveredButton == 0) {
@@ -88,8 +106,6 @@ public class SettingsScreen implements Screen {
             } else if (hoveredButton == 1) {
                 setBorderless();
             } else if (hoveredButton == 2) {
-                setFullscreen();
-            } else if (hoveredButton == 3) {
                 game.setScreen(new MenuScreen(game));
             }
         }
@@ -101,15 +117,13 @@ public class SettingsScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         drawButton(windowedButton, 0, currentMode.equals("windowed"));
         drawButton(borderlessButton, 1, currentMode.equals("borderless"));
-        drawButton(fullscreenButton, 2, currentMode.equals("fullscreen"));
-        drawButton(backButton, 3, false);
+        drawButton(backButton, 2, false);
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0.6f, 0.6f, 0.7f, 1f);
         drawButtonBorder(windowedButton);
         drawButtonBorder(borderlessButton);
-        drawButtonBorder(fullscreenButton);
         drawButtonBorder(backButton);
         shapeRenderer.end();
 
@@ -126,7 +140,6 @@ public class SettingsScreen implements Screen {
         buttonFont.setColor(Color.WHITE);
         drawCenteredText(buttonFont, "Windowed", windowedButton.y + BUTTON_HEIGHT / 2 + 8);
         drawCenteredText(buttonFont, "Borderless", borderlessButton.y + BUTTON_HEIGHT / 2 + 8);
-        drawCenteredText(buttonFont, "Fullscreen", fullscreenButton.y + BUTTON_HEIGHT / 2 + 8);
         drawCenteredText(buttonFont, "Back", backButton.y + BUTTON_HEIGHT / 2 + 8);
 
         batch.end();
@@ -141,12 +154,6 @@ public class SettingsScreen implements Screen {
         DisplayMode displayMode = Gdx.graphics.getDisplayMode();
         Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
         currentMode = "borderless";
-    }
-
-    private void setFullscreen() {
-        DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-        Gdx.graphics.setFullscreenMode(displayMode);
-        currentMode = "fullscreen";
     }
 
     private void drawButton(Rectangle rect, int index, boolean selected) {
@@ -171,7 +178,9 @@ public class SettingsScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
 
     @Override
     public void pause() {}

@@ -7,7 +7,7 @@ import io.github.matheusspacifico.utils.Constants;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
-    // Launch modes: "windowed", "fullscreen", "borderless"
+    // Launch modes: "windowed", "borderless"
     private static final String LAUNCH_MODE = "borderless";
 
     public static void main(String[] args) {
@@ -34,9 +34,6 @@ public class Lwjgl3Launcher {
 
         // Window mode configuration
         switch (LAUNCH_MODE) {
-            case "fullscreen":
-                configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-                break;
             case "borderless":
                 configuration.setDecorated(false);
                 configuration.setWindowedMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
