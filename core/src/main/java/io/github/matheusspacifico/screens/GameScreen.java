@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -39,7 +40,7 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        world = new GameWorld();
+        world = new GameWorld(viewport);
         pauseMenu = new PauseMenu(camera, viewport);
 
         Gdx.input.setCursorCatched(false);
@@ -118,8 +119,12 @@ public class GameScreen implements Screen {
     }
 
     private void renderCrosshair() {
-        float mouseX = Gdx.input.getX();
-        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        // Convert screen coordinates to world coordinates
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(mousePos);
+
+        float mouseX = mousePos.x;
+        float mouseY = mousePos.y;
         float size = Constants.CROSSHAIR_SIZE / 2f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

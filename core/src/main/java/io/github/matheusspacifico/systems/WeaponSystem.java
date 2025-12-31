@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.matheusspacifico.entities.Player;
 import io.github.matheusspacifico.entities.Projectile;
 import io.github.matheusspacifico.utils.Constants;
@@ -15,10 +17,12 @@ public class WeaponSystem {
     private float reloadTimer;
     private float fireTimer;
     private GameWorld world;
+    private Viewport viewport;
     private BitmapFont font;
 
-    public WeaponSystem(GameWorld world) {
+    public WeaponSystem(GameWorld world, Viewport viewport) {
         this.world = world;
+        this.viewport = viewport;
         this.currentAmmo = Constants.MAGAZINE_SIZE;
         this.isReloading = false;
         this.reloadTimer = 0f;
@@ -54,10 +58,11 @@ public class WeaponSystem {
         float playerCenterX = player.getX() + Constants.PLAYER_SIZE / 2f;
         float playerCenterY = player.getY() + Constants.PLAYER_SIZE / 2f;
 
-        float mouseX = Gdx.input.getX();
-        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        // Convert screen coordinates to world coordinates
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(mousePos);
 
-        Projectile projectile = new Projectile(playerCenterX, playerCenterY, mouseX, mouseY);
+        Projectile projectile = new Projectile(playerCenterX, playerCenterY, mousePos.x, mousePos.y);
         world.spawnProjectile(projectile);
 
         currentAmmo--;

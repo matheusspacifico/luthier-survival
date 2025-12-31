@@ -3,6 +3,7 @@ package io.github.matheusspacifico.world;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.matheusspacifico.entities.Player;
 import io.github.matheusspacifico.entities.Projectile;
 import io.github.matheusspacifico.systems.WeaponSystem;
@@ -18,9 +19,12 @@ public class GameWorld implements Disposable {
 
     private WeaponSystem weaponSystem;
 
+    private Viewport viewport;
+
     private int currentDay;
 
-    public GameWorld() {
+    public GameWorld(Viewport viewport) {
+        this.viewport = viewport;
         projectiles = new Array<>();
 
         currentDay = 1;
@@ -36,7 +40,7 @@ public class GameWorld implements Disposable {
     }
 
     private void initializeSystems() {
-        weaponSystem = new WeaponSystem(this);
+        weaponSystem = new WeaponSystem(this, viewport);
     }
 
     public void update(float delta) {
