@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -22,7 +24,9 @@ public class SettingsScreen implements Screen {
     private final Main game;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
+    private FreeTypeFontGenerator fontGenerator;
     private BitmapFont titleFont;
+    private BitmapFont subtitleFont;
     private BitmapFont buttonFont;
     private GlyphLayout layout;
 
@@ -54,11 +58,12 @@ public class SettingsScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         layout = new GlyphLayout();
 
-        titleFont = new BitmapFont();
-        titleFont.getData().setScale(3f);
+        // Load TTF font and generate at exact sizes needed
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans.ttf"));
 
-        buttonFont = new BitmapFont();
-        buttonFont.getData().setScale(1.8f);
+        titleFont = createFont(56);
+        subtitleFont = createFont(24);
+        buttonFont = createFont(32);
 
         float centerX = Constants.SCREEN_WIDTH / 2f - BUTTON_WIDTH / 2f;
         float startY = Constants.SCREEN_HEIGHT / 2f + BUTTON_HEIGHT;
@@ -68,6 +73,15 @@ public class SettingsScreen implements Screen {
         backButton = new Rectangle(centerX, startY - (BUTTON_HEIGHT + BUTTON_SPACING) * 2.5f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         detectCurrentMode();
+    }
+
+    private BitmapFont createFont(int size) {
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = size;
+        parameter.color = Color.WHITE;
+        parameter.minFilter = com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
+        parameter.magFilter = com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
+        return fontGenerator.generateFont(parameter);
     }
 
     private void detectCurrentMode() {
@@ -132,15 +146,13 @@ public class SettingsScreen implements Screen {
         titleFont.setColor(Color.WHITE);
         drawCenteredText(titleFont, "SETTINGS", Constants.SCREEN_HEIGHT - 150);
 
-        titleFont.getData().setScale(1.5f);
-        titleFont.setColor(Color.LIGHT_GRAY);
-        drawCenteredText(titleFont, "Display Mode", Constants.SCREEN_HEIGHT - 220);
-        titleFont.getData().setScale(3f);
+        subtitleFont.setColor(Color.LIGHT_GRAY);
+        drawCenteredText(subtitleFont, "Display Mode", Constants.SCREEN_HEIGHT - 220);
 
         buttonFont.setColor(Color.WHITE);
-        drawCenteredText(buttonFont, "Windowed", windowedButton.y + BUTTON_HEIGHT / 2 + 8);
-        drawCenteredText(buttonFont, "Borderless", borderlessButton.y + BUTTON_HEIGHT / 2 + 8);
-        drawCenteredText(buttonFont, "Back", backButton.y + BUTTON_HEIGHT / 2 + 8);
+        drawCenteredText(buttonFont, "Windowed", windowedButton.y + BUTTON_HEIGHT / 2 + 10);
+        drawCenteredText(buttonFont, "Borderless", borderlessButton.y + BUTTON_HEIGHT / 2 + 10);
+        drawCenteredText(buttonFont, "Back", backButton.y + BUTTON_HEIGHT / 2 + 10);
 
         batch.end();
     }
@@ -195,7 +207,9 @@ public class SettingsScreen implements Screen {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
+        fontGenerator.dispose();
         titleFont.dispose();
+        subtitleFont.dispose();
         buttonFont.dispose();
     }
 }

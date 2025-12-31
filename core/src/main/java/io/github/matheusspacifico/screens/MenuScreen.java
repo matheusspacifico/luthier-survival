@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -20,7 +22,9 @@ public class MenuScreen implements Screen {
     private final Main game;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
+    private FreeTypeFontGenerator fontGenerator;
     private BitmapFont titleFont;
+    private BitmapFont taglineFont;
     private BitmapFont buttonFont;
     private GlyphLayout layout;
 
@@ -51,13 +55,12 @@ public class MenuScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         layout = new GlyphLayout();
 
-        titleFont = new BitmapFont();
-        titleFont.getData().setScale(4f);
-        titleFont.setColor(Color.WHITE);
+        // Load TTF font and generate at exact sizes needed
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans.ttf"));
 
-        buttonFont = new BitmapFont();
-        buttonFont.getData().setScale(2f);
-        buttonFont.setColor(Color.WHITE);
+        titleFont = createFont(72);
+        taglineFont = createFont(28);
+        buttonFont = createFont(36);
 
         float centerX = Constants.SCREEN_WIDTH / 2f - BUTTON_WIDTH / 2f;
         float startY = Constants.SCREEN_HEIGHT / 2f + BUTTON_HEIGHT;
@@ -65,6 +68,15 @@ public class MenuScreen implements Screen {
         startButton = new Rectangle(centerX, startY, BUTTON_WIDTH, BUTTON_HEIGHT);
         settingsButton = new Rectangle(centerX, startY - BUTTON_HEIGHT - BUTTON_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT);
         quitButton = new Rectangle(centerX, startY - (BUTTON_HEIGHT + BUTTON_SPACING) * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    }
+
+    private BitmapFont createFont(int size) {
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = size;
+        parameter.color = Color.WHITE;
+        parameter.minFilter = com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
+        parameter.magFilter = com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
+        return fontGenerator.generateFont(parameter);
     }
 
     @Override
@@ -109,18 +121,16 @@ public class MenuScreen implements Screen {
 
         batch.begin();
 
-        titleFont.getData().setScale(4f);
         titleFont.setColor(Color.WHITE);
         drawCenteredText(titleFont, "LUTHIER SURVIVAL", Constants.SCREEN_HEIGHT - 150);
 
-        titleFont.getData().setScale(1.5f);
-        titleFont.setColor(Color.LIGHT_GRAY);
-        drawCenteredText(titleFont, "Craft by day. Shred by night.", Constants.SCREEN_HEIGHT - 220);
+        taglineFont.setColor(Color.LIGHT_GRAY);
+        drawCenteredText(taglineFont, "Craft by day. Shred by night.", Constants.SCREEN_HEIGHT - 220);
 
         buttonFont.setColor(Color.WHITE);
-        drawCenteredText(buttonFont, "START GAME", startButton.y + BUTTON_HEIGHT / 2 + 8);
-        drawCenteredText(buttonFont, "SETTINGS", settingsButton.y + BUTTON_HEIGHT / 2 + 8);
-        drawCenteredText(buttonFont, "QUIT", quitButton.y + BUTTON_HEIGHT / 2 + 8);
+        drawCenteredText(buttonFont, "START GAME", startButton.y + BUTTON_HEIGHT / 2 + 12);
+        drawCenteredText(buttonFont, "SETTINGS", settingsButton.y + BUTTON_HEIGHT / 2 + 12);
+        drawCenteredText(buttonFont, "QUIT", quitButton.y + BUTTON_HEIGHT / 2 + 12);
 
         batch.end();
     }
@@ -162,7 +172,9 @@ public class MenuScreen implements Screen {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
+        fontGenerator.dispose();
         titleFont.dispose();
+        taglineFont.dispose();
         buttonFont.dispose();
     }
 }
