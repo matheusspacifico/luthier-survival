@@ -63,19 +63,25 @@ axe-and-axes/
 
 ```java
 // Screen
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+SPRITE_SCALE = 2.5  // Scales pixel art for higher resolution
 
-// Sprites (16-bit pixel art style)
-PLAYER_SIZE = 32x32
+// Display modes (configured in Lwjgl3Launcher.java)
+// "windowed" - standard window
+// "fullscreen" - exclusive fullscreen
+// "borderless" - borderless windowed (default)
+
+// Sprites (16-bit pixel art style, scaled by SPRITE_SCALE at runtime)
+PLAYER_SIZE = 32x32 (rendered at 80x80)
 HOUSE_SIZE = 64x64 or 96x96
 ZOMBIE_SIZE = 24x24 or 32x32
 TREE_SIZE = 48x48 or 64x64
-PROJECTILE_SIZE = 8x8
+PROJECTILE_SIZE = 8x8 (rendered at 20x20)
 
-// Player
-PLAYER_SPEED = 150 px/s
-PLAYER_SPRINT_SPEED = 250 px/s
+// Player (speeds scaled for larger resolution)
+PLAYER_SPEED = 375 px/s (150 * SPRITE_SCALE)
+PLAYER_SPRINT_SPEED = 625 px/s (250 * SPRITE_SCALE)
 
 // Day/Night Cycle (Spring baseline)
 DAY_DURATION = 12 hours (game time)
